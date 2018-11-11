@@ -1,9 +1,12 @@
 NAME=vitrine_games_catcher
 GO=go
 BINARY_NAME=games_catcher
-SRCS=games_catcher.go \
+SRCS=main.go \
 	 db.go \
-	 get_games.go \
+	 get_game.go \
+	 db_games.go \
+	 get_company.go \
+	 db_companies.go \
 
 
 all: $(NAME)
