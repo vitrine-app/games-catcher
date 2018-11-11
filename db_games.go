@@ -13,6 +13,7 @@ type DbGame struct {
 	Summary     sql.NullString `json:"summary"`
 	Rating      sql.NullInt64  `json:"rating"`
 	ReleaseDate sql.NullInt64  `json:"release_date"`
+	SeriesId    sql.NullInt64  `json:"series_id"`
 	DeveloperId sql.NullInt64  `json:"developer_id"`
 	PublisherId sql.NullInt64  `json:"publisher_id"`
 	Cover       sql.NullString `json:"cover"`
@@ -38,13 +39,14 @@ func (db DbClient) GetGame(igdbId int) DbGame {
 }
 
 func (db DbClient) AddGame(game DbGame) {
-	query := fmt.Sprintf("INSERT INTO games (igdb_id, name, summary, rating, release_date, developer_id, publisher_id, cover, screenshots, created_at) "+
-		"VALUES (%d, '%s', '%s', %d, %d, %d, %d, '%s', '%s', NOW())",
+	query := fmt.Sprintf("INSERT INTO games (igdb_id, name, summary, rating, release_date, series_id, developer_id, publisher_id, cover, screenshots, created_at) "+
+		"VALUES (%d, '%s', '%s', %d, %d, %d, %d, %d, '%s', '%s', NOW())",
 		game.IgdbId,
 		game.Name,
 		game.Summary.String,
 		game.Rating.Int64,
 		game.ReleaseDate.Int64,
+		game.SeriesId.Int64,
 		game.DeveloperId.Int64,
 		game.PublisherId.Int64,
 		game.Cover.String,

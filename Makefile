@@ -7,6 +7,8 @@ SRCS=main.go \
 	 db_games.go \
 	 get_company.go \
 	 db_companies.go \
+	 get_series.go \
+	 db_series.go \
 
 
 all: $(NAME)

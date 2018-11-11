@@ -38,6 +38,10 @@ func formatGameFromIgdb(igdbGame igdb.Game, igdbId int) DbGame {
 		Cover:       sql.NullString{String: cover},
 		Screenshots: sql.NullString{String: strings.Join(screenshots, ";")},
 	}
+	if igdbGame.Collection != 0 {
+		series := getSeries(igdbGame.Collection)
+		dbGame.SeriesId = sql.NullInt64{Int64: int64(series.Id)}
+	}
 	if len(igdbGame.Developers) != 0 {
 		developer := getCompany(igdbGame.Developers[0])
 		dbGame.DeveloperId = sql.NullInt64{Int64: int64(developer.Id)}
