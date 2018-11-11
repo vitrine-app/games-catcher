@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/Henry-Sarabia/igdb"
 	"os"
 )
 import _ "github.com/go-sql-driver/mysql"
@@ -15,9 +14,9 @@ type DbClient struct {
 type DbGame struct {
 	IgdbId      uint           `json:"igdb_id"`
 	Name        string         `json:"name"`
-	Series      sql.NullString `json:"summary"`
+	Summary     sql.NullString `json:"summary"`
 	Rating      sql.NullInt64  `json:"rating"`
-	ReleaseDate sql.NullString `json:"release_date"`
+	ReleaseDate sql.NullInt64  `json:"release_date"`
 	Cover       sql.NullString `json:"cover"`
 	Screenshots sql.NullString `json:"screenshots"`
 }
@@ -41,7 +40,7 @@ func (db DbClient) GetGame(igdbId int) DbGame {
 		"SELECT name, summary, rating, release_date, cover, screenshots FROM games WHERE igdb_id = ?", igdbId,
 	).Scan(
 		&game.Name,
-		&game.Series,
+		&game.Summary,
 		&game.Rating,
 		&game.ReleaseDate,
 		&game.Cover,
@@ -53,9 +52,16 @@ func (db DbClient) GetGame(igdbId int) DbGame {
 	return game
 }
 
-func (db DbClient) AddGame(igdbId int, game igdb.Game) {
-	query := fmt.Sprintf("INSERT INTO games (igdb_id, name) VALUES (%d, '%s')", igdbId, game.Name)
-	fmt.Println(query)
+func (db DbClient) AddGame(igdbId int, game DbGame) {
+	query := fmt.Sprintf("INSERT INTO games (igdb_id, name, summary, rating, release_date, cover, screenshots, created_at) VALUES (%d, '%s', '%s', %d, %d, '%s', '%s', NOW())",
+		igdbId,
+		game.Name,
+		game.Summary.String,
+		game.Rating.Int64,
+		game.ReleaseDate.Int64,
+		game.Cover.String,
+		game.Screenshots.String,
+	)
 	insert, err := db.instance.Query(query)
 	if err != nil {
 		panic(err.Error())
