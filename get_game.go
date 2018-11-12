@@ -11,13 +11,13 @@ type Game struct {
 	Name string
 }
 
-func getGame(gameId int) {
+func getGame(gameId int) DbGame {
 	if db.GameExists(gameId) == false {
 		game := queryIgdbGame(gameId)
 		db.AddGame(formatGameFromIgdb(game, gameId))
 	}
 	game := db.GetGame(gameId)
-	fmt.Println(game)
+	return game
 }
 
 func formatGameFromIgdb(igdbGame igdb.Game, igdbId int) DbGame {
