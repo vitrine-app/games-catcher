@@ -20,9 +20,9 @@ func formatSeriesFromIgdb(igdbSeries igdb.Collection, igdbId int) DbSeries {
 }
 
 func queryIgdbSeries(igdbId int) igdb.Collection {
-	game, err := igdbClient.Collections.Get(igdbId, igdb.SetFields("name"))
+	series, err := igdbClient.Collections.Get(igdbId, igdb.SetFields("name"))
 	if err != nil {
 		panic(err.Error())
 	}
-	return *game
+	return *series
 }

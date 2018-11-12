@@ -20,9 +20,9 @@ func formatCompanyFromIgdb(igdbCompany igdb.Company, igdbId int) DbCompany {
 }
 
 func queryIgdbCompany(igdbId int) igdb.Company {
-	game, err := igdbClient.Companies.Get(igdbId, igdb.SetFields("name"))
+	company, err := igdbClient.Companies.Get(igdbId, igdb.SetFields("name"))
 	if err != nil {
 		panic(err.Error())
 	}
-	return *game
+	return *company
 }

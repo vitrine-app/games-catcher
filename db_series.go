@@ -9,23 +9,23 @@ type DbSeries struct {
 }
 
 func (db DbClient) GetSeries(igdbId int) DbSeries {
-	var company DbSeries
+	var series DbSeries
 	err := db.instance.QueryRow(
 		"SELECT id, name FROM series WHERE igdb_id = ?", igdbId,
 	).Scan(
-		&company.Id,
-		&company.Name,
+		&series.Id,
+		&series.Name,
 	)
 	if err != nil {
 		panic(err.Error())
 	}
-	return company
+	return series
 }
 
-func (db DbClient) AddSeries(company DbSeries) {
+func (db DbClient) AddSeries(series DbSeries) {
 	query := fmt.Sprintf("INSERT INTO series (igdb_id, name, created_at) VALUES (%d, '%s', NOW())",
-		company.IgdbId,
-		company.Name,
+		series.IgdbId,
+		series.Name,
 	)
 	insert, err := db.instance.Query(query)
 	if err != nil {
@@ -35,8 +35,8 @@ func (db DbClient) AddSeries(company DbSeries) {
 }
 
 func (db DbClient) SeriesExists(igdbId int) bool {
-	var company DbCompany
-	err := db.instance.QueryRow("SELECT name FROM series WHERE igdb_id = ?", igdbId).Scan(&company.Name)
+	var series DbSeries
+	err := db.instance.QueryRow("SELECT name FROM series WHERE igdb_id = ?", igdbId).Scan(&series.Name)
 	if err != nil {
 		return false
 	}
