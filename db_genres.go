@@ -43,7 +43,7 @@ func (db DbClient) GetGenresNameByGameId(gameId uint) []string {
 }
 
 func (db DbClient) AddGenre(genre DbGenre) {
-	query := fmt.Sprintf("INSERT INTO genres (igdb_id, name, created_at) VALUES (%d, '%s', NOW())",
+	query := fmt.Sprintf("INSERT INTO genres (igdb_id, name, created_at) VALUES (%d, \"%s\", NOW())",
 		genre.IgdbId,
 		genre.Name,
 	)

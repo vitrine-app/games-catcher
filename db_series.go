@@ -32,7 +32,7 @@ func (db DbClient) GetSeriesById(id int64) DbSeries {
 }
 
 func (db DbClient) AddSeries(series DbSeries) {
-	query := fmt.Sprintf("INSERT INTO series (igdb_id, name, created_at) VALUES (%d, '%s', NOW())",
+	query := fmt.Sprintf("INSERT INTO series (igdb_id, name, created_at) VALUES (%d, \"%s\", NOW())",
 		series.IgdbId,
 		series.Name,
 	)

@@ -45,7 +45,7 @@ func (db DbClient) GetGame(igdbId int) DbGame {
 
 func (db DbClient) AddGame(game DbGame) int64 {
 	query := fmt.Sprintf("INSERT INTO games (igdb_id, name, summary, rating, release_date, series_id, developer_id, publisher_id, cover, screenshots, created_at) "+
-		"VALUES (%d, '%s', '%s', %d, %d, %d, %d, %d, '%s', '%s', NOW())",
+		"VALUES (%d, \"%s\", \"%s\", %d, %d, %d, %d, %d, \"%s\", \"%s\", NOW())",
 		game.IgdbId,
 		game.Name,
 		game.Summary.String,

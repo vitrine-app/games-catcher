@@ -18,4 +18,17 @@ func GetGame(gameId int) *C.char {
 	return C.CString(serializedGame)
 }
 
+//export GetFirstGame
+func GetFirstGame(gameName string) *C.char {
+	games, err := igdbClient.Games.Search(
+		gameName,
+		igdb.SetLimit(1),
+	)
+	if err != nil {
+		panic(err.Error())
+	}
+	gameId := (*games[0]).ID
+	return GetGame(gameId)
+}
+
 func main() {}

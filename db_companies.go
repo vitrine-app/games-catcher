@@ -32,7 +32,7 @@ func (db DbClient) GetCompanyById(id int64) DbCompany {
 }
 
 func (db DbClient) AddCompany(company DbCompany) {
-	query := fmt.Sprintf("INSERT INTO companies (igdb_id, name, created_at) VALUES (%d, '%s', NOW())",
+	query := fmt.Sprintf("INSERT INTO companies (igdb_id, name, created_at) VALUES (%d, \"%s\", NOW())",
 		company.IgdbId,
 		company.Name,
 	)
