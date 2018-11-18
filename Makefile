@@ -3,12 +3,14 @@ GO=go
 BINARY_NAME=games_catcher
 SRCS=main.go \
 	 db.go \
-	 get_game.go \
 	 db_games.go \
-	 get_company.go \
 	 db_companies.go \
-	 get_series.go \
 	 db_series.go \
+	 db_genres.go \
+	 get_game.go \
+	 get_company.go \
+	 get_series.go \
+	 get_genre.go \
 
 
 all: $(NAME)

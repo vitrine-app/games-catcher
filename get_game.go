@@ -14,13 +14,13 @@ type Game struct {
 func getGame(gameId int) DbGame {
 	if db.GameExists(gameId) == false {
 		game := queryIgdbGame(gameId)
-		db.AddGame(formatGameFromIgdb(game, gameId))
+		insertGame(game, gameId)
 	}
 	game := db.GetGame(gameId)
 	return game
 }
 
-func formatGameFromIgdb(igdbGame igdb.Game, igdbId int) DbGame {
+func insertGame(igdbGame igdb.Game, igdbId int) DbGame {
 	var screenshots []string
 	for _, screenshot := range igdbGame.Screenshots {
 		screenshotUrl := fmt.Sprintf("https:%s", screenshot.URL)
@@ -49,6 +49,11 @@ func formatGameFromIgdb(igdbGame igdb.Game, igdbId int) DbGame {
 	if len(igdbGame.Publishers) != 0 {
 		publisher := getCompany(igdbGame.Publishers[0])
 		dbGame.PublisherId = sql.NullInt64{Int64: int64(publisher.Id)}
+	}
+	id := db.AddGame(dbGame)
+	for _, genreId := range igdbGame.Genres {
+		genre := getGenre(genreId)
+		db.AddGameGenre(id, genre.Id)
 	}
 	return dbGame
 }
