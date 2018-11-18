@@ -38,7 +38,7 @@ func (db DbClient) GetGame(igdbId int) DbGame {
 	return game
 }
 
-func (db DbClient) AddGame(game DbGame) {
+func (db DbClient) AddGame(game DbGame) int64 {
 	query := fmt.Sprintf("INSERT INTO games (igdb_id, name, summary, rating, release_date, series_id, developer_id, publisher_id, cover, screenshots, created_at) "+
 		"VALUES (%d, '%s', '%s', %d, %d, %d, %d, %d, '%s', '%s', NOW())",
 		game.IgdbId,
@@ -52,11 +52,15 @@ func (db DbClient) AddGame(game DbGame) {
 		game.Cover.String,
 		game.Screenshots.String,
 	)
-	insert, err := db.instance.Query(query)
+	result, err := db.instance.Exec(query)
 	if err != nil {
 		panic(err.Error())
 	}
-	defer insert.Close()
+	id, err := result.LastInsertId()
+	if err != nil {
+		panic(err.Error())
+	}
+	return id
 }
 
 func (db DbClient) GameExists(igdbId int) bool {

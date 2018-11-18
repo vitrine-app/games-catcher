@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 type DbGenre struct {
-	Id     uint   `json:"id"`
+	Id     uint64 `json:"id"`
 	IgdbId uint   `json:"igdb_id"`
 	Name   string `json:"name"`
 }
@@ -41,4 +41,16 @@ func (db DbClient) GenreExists(igdbId int) bool {
 		return false
 	}
 	return true
+}
+
+func (db DbClient) AddGameGenre(gameDbId int64, genreDbId uint64) {
+	query := fmt.Sprintf("INSERT INTO games_genres (game_id, genre_id) VALUES (%d, %d)",
+		gameDbId,
+		genreDbId,
+	)
+	insert, err := db.instance.Query(query)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer insert.Close()
 }
