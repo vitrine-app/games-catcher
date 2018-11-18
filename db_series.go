@@ -22,6 +22,15 @@ func (db DbClient) GetSeries(igdbId int) DbSeries {
 	return series
 }
 
+func (db DbClient) GetSeriesById(id int64) DbSeries {
+	var series DbSeries
+	err := db.instance.QueryRow("SELECT name FROM series WHERE id = ?", id).Scan(&series.Name)
+	if err != nil {
+		panic(err.Error())
+	}
+	return series
+}
+
 func (db DbClient) AddSeries(series DbSeries) {
 	query := fmt.Sprintf("INSERT INTO series (igdb_id, name, created_at) VALUES (%d, '%s', NOW())",
 		series.IgdbId,
