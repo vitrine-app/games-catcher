@@ -23,14 +23,19 @@ type DbGame struct {
 func (db DbClient) GetGame(igdbId int) DbGame {
 	var game DbGame
 	err := db.instance.QueryRow(
-		"SELECT name, summary, rating, release_date, cover, screenshots FROM games WHERE igdb_id = ?", igdbId,
+		"SELECT id, name, summary, rating, release_date, cover, screenshots, series_id, developer_id, publisher_id FROM games WHERE igdb_id = ?",
+		igdbId,
 	).Scan(
+		&game.Id,
 		&game.Name,
 		&game.Summary,
 		&game.Rating,
 		&game.ReleaseDate,
 		&game.Cover,
 		&game.Screenshots,
+		&game.SeriesId,
+		&game.DeveloperId,
+		&game.PublisherId,
 	)
 	if err != nil {
 		panic(err.Error())

@@ -22,6 +22,15 @@ func (db DbClient) GetCompany(igdbId int) DbCompany {
 	return company
 }
 
+func (db DbClient) GetCompanyById(id int64) DbCompany {
+	var company DbCompany
+	err := db.instance.QueryRow("SELECT name FROM companies WHERE id = ?", id).Scan(&company.Name)
+	if err != nil {
+		panic(err.Error())
+	}
+	return company
+}
+
 func (db DbClient) AddCompany(company DbCompany) {
 	query := fmt.Sprintf("INSERT INTO companies (igdb_id, name, created_at) VALUES (%d, '%s', NOW())",
 		company.IgdbId,

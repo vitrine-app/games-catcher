@@ -2,13 +2,23 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"github.com/Henry-Sarabia/igdb"
 	"strings"
 )
 
-type Game struct {
-	Name string
+type FormattedGame struct {
+	Name        string   `json:"name"`
+	Series      string   `json:"series"`
+	Genres      []string `json:"genres"`
+	ReleaseDate int64    `json:"releaseDate"`
+	Summary     string   `json:"summary"`
+	Developer   string   `json:"developer"`
+	Publisher   string   `json:"publisher"`
+	Rating      int64    `json:"rating"`
+	Cover       string   `json:"cover"`
+	Screenshots []string `json:"screenshots"`
 }
 
 func getGame(gameId int) DbGame {
@@ -18,6 +28,39 @@ func getGame(gameId int) DbGame {
 	}
 	game := db.GetGame(gameId)
 	return game
+}
+
+func formatGame(game DbGame) string {
+	var screenshots []string
+	if game.Screenshots.Valid {
+		screenshots = strings.Split(game.Screenshots.String, ";")
+	}
+	formattedGame := FormattedGame{
+		Name:        game.Name,
+		Genres:      db.GetGenresNameByGameId(game.Id),
+		ReleaseDate: validateNumber(game.ReleaseDate),
+		Summary:     validateString(game.Summary),
+		Rating:      validateNumber(game.Rating),
+		Cover:       validateString(game.Cover),
+		Screenshots: screenshots,
+	}
+	if game.SeriesId.Valid {
+		series := db.GetSeriesById(game.SeriesId.Int64)
+		formattedGame.Series = series.Name
+	}
+	if game.DeveloperId.Valid {
+		developer := db.GetCompanyById(game.DeveloperId.Int64)
+		formattedGame.Developer = developer.Name
+	}
+	if game.PublisherId.Valid {
+		publisher := db.GetCompanyById(game.PublisherId.Int64)
+		formattedGame.Publisher = publisher.Name
+	}
+	gameString, err := json.Marshal(formattedGame)
+	if err != nil {
+		panic(err.Error())
+	}
+	return string(gameString)
 }
 
 func insertGame(igdbGame igdb.Game, igdbId int) DbGame {
