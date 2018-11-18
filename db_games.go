@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 )
 import _ "github.com/go-sql-driver/mysql"
 
@@ -45,18 +46,19 @@ func (db DbClient) GetGame(igdbId int) DbGame {
 
 func (db DbClient) AddGame(game DbGame) int64 {
 	query := fmt.Sprintf("INSERT INTO games (igdb_id, name, summary, rating, release_date, series_id, developer_id, publisher_id, cover, screenshots, created_at) "+
-		"VALUES (%d, \"%s\", \"%s\", %d, %d, %d, %d, %d, \"%s\", \"%s\", NOW())",
+		"VALUES (%d, \"%s\", \"%s\", %d, %d, %s, %s, %s, \"%s\", \"%s\", NOW())",
 		game.IgdbId,
 		game.Name,
-		game.Summary.String,
+		strings.Replace(game.Summary.String, "\"", "'", -1),
 		game.Rating.Int64,
 		game.ReleaseDate.Int64,
-		game.SeriesId.Int64,
-		game.DeveloperId.Int64,
-		game.PublisherId.Int64,
+		foreignKey(game.SeriesId),
+		foreignKey(game.DeveloperId),
+		foreignKey(game.PublisherId),
 		game.Cover.String,
 		game.Screenshots.String,
 	)
+	fmt.Println(query)
 	result, err := db.instance.Exec(query)
 	if err != nil {
 		panic(err.Error())

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 type DbClient struct {
@@ -21,4 +22,11 @@ func New() DbClient {
 
 func (db DbClient) Close() {
 	defer db.instance.Close()
+}
+
+func foreignKey(fieldId sql.NullInt64) string {
+	if fieldId.Valid {
+		return strconv.Itoa(int(fieldId.Int64))
+	}
+	return "NULL"
 }

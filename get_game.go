@@ -75,23 +75,23 @@ func insertGame(igdbGame igdb.Game, igdbId int) DbGame {
 	dbGame := DbGame{
 		IgdbId:      uint(igdbId),
 		Name:        igdbGame.Name,
-		Summary:     sql.NullString{String: igdbGame.Summary},
-		Rating:      sql.NullInt64{Int64: int64(igdbGame.Rating)},
-		ReleaseDate: sql.NullInt64{Int64: int64(igdbGame.FirstReleaseDate)},
-		Cover:       sql.NullString{String: cover},
-		Screenshots: sql.NullString{String: strings.Join(screenshots, ";")},
+		Summary:     sql.NullString{String: igdbGame.Summary, Valid: true},
+		Rating:      sql.NullInt64{Int64: int64(igdbGame.Rating), Valid: true},
+		ReleaseDate: sql.NullInt64{Int64: int64(igdbGame.FirstReleaseDate), Valid: true},
+		Cover:       sql.NullString{String: cover, Valid: true},
+		Screenshots: sql.NullString{String: strings.Join(screenshots, ";"), Valid: true},
 	}
 	if igdbGame.Collection != 0 {
 		series := getSeries(igdbGame.Collection)
-		dbGame.SeriesId = sql.NullInt64{Int64: int64(series.Id)}
+		dbGame.SeriesId = sql.NullInt64{Int64: int64(series.Id), Valid: true}
 	}
 	if len(igdbGame.Developers) != 0 {
 		developer := getCompany(igdbGame.Developers[0])
-		dbGame.DeveloperId = sql.NullInt64{Int64: int64(developer.Id)}
+		dbGame.DeveloperId = sql.NullInt64{Int64: int64(developer.Id), Valid: true}
 	}
 	if len(igdbGame.Publishers) != 0 {
 		publisher := getCompany(igdbGame.Publishers[0])
-		dbGame.PublisherId = sql.NullInt64{Int64: int64(publisher.Id)}
+		dbGame.PublisherId = sql.NullInt64{Int64: int64(publisher.Id), Valid: true}
 	}
 	id := db.AddGame(dbGame)
 	for _, genreId := range igdbGame.Genres {
