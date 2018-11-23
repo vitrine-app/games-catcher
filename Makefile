@@ -11,6 +11,7 @@ SRCS=main.go \
 	 get_company.go \
 	 get_series.go \
 	 get_genre.go \
+	 research.go \
 	 helpers.go \
 
 

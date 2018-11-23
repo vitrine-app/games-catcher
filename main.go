@@ -31,4 +31,9 @@ func GetFirstGame(gameName string) *C.char {
 	return GetGame(gameId)
 }
 
+//export ResearchGames
+func ResearchGames(gameName string, listSize int) *C.char {
+	return C.CString(researchGames(gameName, listSize))
+}
+
 func main() {}
