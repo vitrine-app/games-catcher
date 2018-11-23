@@ -24,10 +24,14 @@ func researchGames(gameName string, listSize int) string {
 	}
 	var research []ResearchedGame
 	for _, game := range games {
+		cover := "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/nocover_qhhlj6.jpg"
+		if len(game.Cover.URL) > 0 {
+			cover = strings.Replace(fmt.Sprintf("https:%s", game.Cover.URL), "t_thumb", "t_cover_big_2x", -1)
+		}
 		research = append(research, ResearchedGame{
 			Id:    game.ID,
 			Name:  game.Name,
-			Cover: strings.Replace(fmt.Sprintf("https:%s", game.Cover.URL), "t_thumb", "t_cover_big_2x", -1),
+			Cover: cover,
 		})
 	}
 	researchString, err := json.Marshal(research)
